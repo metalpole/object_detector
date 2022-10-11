@@ -30,8 +30,6 @@ def encode_image(image):
         encoded_string = base64.b64encode(image_file.read())
     return encoded_string
 
-colors = ['red','green','cyan','yellow','blue','magenta','black','white']
-
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update, context):
