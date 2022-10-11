@@ -10,11 +10,9 @@ the Dispatcher and registered at their respective places.
 import logging, os, asyncio, io, warnings, datetime
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from deepgram import Deepgram
 from PIL import Image
 
 load_dotenv()
-dg_client = Deepgram(os.getenv('DEEPGRAM_API'))
 
 # Enable logging
 logging.basicConfig(filename='log.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -33,22 +31,8 @@ def text (update, context):
     update.message.reply_text('This bot only works with audio recordings. Hold down the microphone button to record audio.')
 
 def voice(update, context):
-    '''Parse audio recording'''
-    # https://docs.python-telegram-bot.org/en/stable/telegram.message.html?highlight=reply_text#telegram.Message.reply_text
-    # Get audio file
-    audio_file = context.bot.get_file(update.message.voice.file_id)
-    audio_file.download(f"voice_note.ogg")
     update.message.reply_text('Recording received, image available shortly.')
-
-    # Get transcript
-    async def test():
-        with open('voice_note.ogg', 'rb') as audio:
-            source = {'buffer': audio, 'mimetype': 'audio/ogg'}
-            response = await dg_client.transcription.prerecorded(source, {'punctuate': True})
-        return response
-    response = asyncio.run(test())
-    transcript = response['results']['channels'][0]['alternatives'][0]['transcript']
-    logger.info(transcript)
+    # logger.info(transcript)
 
     # Return generated image
     # update.message.reply_photo(open('image.png', 'rb'), caption=transcript)
